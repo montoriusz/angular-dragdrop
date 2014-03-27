@@ -57,31 +57,27 @@ angular.module("ngDragDrop",[])
                 var dragEnterClass = attr.dragEnterClass || "on-drag-enter";
                 var dragHoverClass = attr.dragHoverClass || "on-drag-hover";
 
-                function onDragOver(e) {
-
-                    if (e.preventDefault) {
-                        e.preventDefault(); // Necessary. Allows us to drop.
-                    }
-
-                    if (e.stopPropagation) {
+                function preventDefault(e) {
+                    if (e.preventDefault)
+                        e.preventDefault();
+                    if (e.stopPropagation)
                         e.stopPropagation();
-                    }
+                }
+
+                function onDragOver(e) {
+                    preventDefault(e);
                     e.dataTransfer.dropEffect = 'move';
                     return false;
                 }
 
                 function onDragEnter(e) {
+                    preventDefault(e);
                     $rootScope.$broadcast("ANGULAR_HOVER", dropChannel);
                     element.addClass(dragHoverClass);
                 }
 
                 function onDrop(e) {
-                    if (e.preventDefault) {
-                        e.preventDefault(); // Necessary. Allows us to drop.
-                    }
-                    if (e.stopPropagation) {
-                        e.stopPropagation(); // Necessary. Allows us to drop.
-                    }
+                    preventDefault(e);
                     var data = e.dataTransfer.getData("Text");
                     data = angular.fromJson(data);
                     var fn = $parse(attr.uiOnDrop);
